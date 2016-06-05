@@ -1,0 +1,40 @@
+{{extend 'layout.html'}}
+<center><h2>Timelog Filters</h2></center>
+<br><br><br>
+{{=form}}
+
+{{if row!=None:}}
+{{l=len(row)-1}}
+<br>
+<h2>Time Log</h2>
+<form name="log" >
+<table border="1" cellspacing="0" >
+    <tr>
+    
+        <td width="300" align="center"><font size="3">Email Id</font></td>
+         <td width="100" align="center"><font size="3">User Type</font></td>
+          <td width="250" align="center"><font size="3">Activity</font></td>
+       
+        <td width="150" align="center"><font size="3">Date<br>(YYYY-MM-DD)</font></td>
+        <td width="150" align="center"><font size="3">Name</font></td>
+        <td width="100" align="center"><font size="3">UID</font></td>
+        <td width="100" align="center"><font size="3">IP ADDRESS</font></td>
+    </tr>
+    {{while (l >= 0):}}
+        <tr>
+    
+            <td align="center" ><font size="2">{{=row[l].origin}}</font></td>
+            <td  align="center"><font size="2">{{=row[l].user_type}}</font></td>
+            <td  align="center"><font size="2">{{=row[l].description}}</font></td>
+            <td align="center"><font size="2">{{=row[l].time_stamp}}</font></td>
+            <td align="center"><font size="2">{{=row[l].name}}</font></td>
+            <td align="center"><font size="2">{{=row[l].uid}}</font></td>
+            <td align="center"><font size="2">{{=row[l].client_ip}}</font></td>
+           
+        </tr>
+    {{l=l-1}}
+  
+{{pass}}
+{{pass}}
+    </table>
+</form>

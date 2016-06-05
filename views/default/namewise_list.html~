@@ -1,0 +1,34 @@
+{{extend 'layout.html'}}
+<center><font size='5'>NAMEWISE LISTING OF APPLICANTS</font></center><br><br>
+<center><font size='3'>{{=form}}</font></center><br/>
+<table border="0" cellspacing='0'>
+{{if len(msg):}}
+    <tr>
+      <td><left><b>APPLICANT NAME:</b> {{=msg[0].Applicant.apname}}{{for i in range(0,20):}}&nbsp{{pass}}</center></td>
+      <td><center><b>APPLICANT ROLL NO.</b> {{=msg[0].Applicant.aprollno}} {{for i in range(0,20):}}&nbsp{{pass}}</center></td>
+    </tr>
+    <tr>
+    <td> {{for i in range(0,20):}}&nbsp{{pass}}</td>
+    <td> {{for i in range(0,20):}}&nbsp{{pass}}</td>
+    </tr>
+{{pass}}
+</table>
+<br />
+<table border='1' cellspacing='0' class="rounded-corner">
+   <tr>
+     <td><center>COURSE ID</center></td>
+      <td><center>COURSE NAME</center></td>
+      <td><center>COURSE CREDITS</center></td>
+      <td><center>PREFERENCES</center></td>
+      <td><center>STATUS</center></td>
+   </tr>
+   {{ for i in msg :}}
+   <tr>
+      <td><center>{{=i.Course.cid}}</center></td>
+      <td><center>{{=i.Course.cname}}</center></td>
+      <td><center>{{=i.Course.cdts}}</center></td>
+      <td><center>{{=i.AppliedFor.preference}}</center></td>
+      <td><center>{{=i.AppliedFor.status}}</center></td>
+   </tr>
+   {{pass}}
+</table>

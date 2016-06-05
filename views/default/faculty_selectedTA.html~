@@ -1,0 +1,28 @@
+{{extend 'layout.html'}}
+<center><font size='5'>SELECTED TAs</font></center><br /><br />
+<center>
+<table border='1' cellspacing="0" cellpadding="8" class="width">
+   <tr>
+      <td  align="center"><b>COURSE NAME</b></td>
+      <!--td><center><b>Course Id</b>  {{for i in range(0,8):}}&nbsp{{pass}}</center></td-->
+      <td align="center"><b>TA TYPE</b></td>
+      <td  align="center"><b>NAME</b></td>
+      <td align="center"><b>ROLL NO</b></td>
+      <!--td><center><b>Email Id</b> {{for i in range(0,20):}}&nbsp{{pass}}</center> </td-->
+      <td  align="center"><b>GRADE</b></td>
+      <td  align="center"><b>CGPA</b></td>
+   </tr>
+   {{ for i in records :}}
+   <tr>
+      <td width="150" align="center">{{=i.Course.cname}}</td>
+      <!--td><center>{{=i.Course.cid}}</center></td-->
+      <td width="70" align="center">{{=i.SelectedTA.TAtype}}</td>
+      <td width="140" align="center"><a href="#" onclick="alert('Email-id:   {{=i.Applicant.apemail_id}}\r\n\nPhone No.:   {{=i.Applicant.phoneno}}')">{{=i.Applicant.apname}}</a></td>
+      <td width="100" align="center">{{=i.Applicant.aprollno}}</td>
+      <!--td><center>{{=i.Applicant.apemail_id}}</center></td-->
+      <td width="70" align="center">{{=i.AppliedFor.grade}}</td>
+      <td width="70" align="center">{{=i.Applicant.apcgpa}}</td>
+   </tr>
+   {{pass}}
+</table>
+</center>

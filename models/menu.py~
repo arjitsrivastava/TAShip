@@ -1,0 +1,147 @@
+# coding: utf8
+import datetime
+#########################################################################
+## Customize your APP title, subtitle and menus here
+#########################################################################
+
+response.title = T('TA Portal')
+response.subtitle = T(session.current_semester)
+response.logo = URL('static','iiit_logo.png')
+
+##########################################
+## this is the authentication menu
+## remove if not necessary
+##########################################
+
+if 'auth' in globals():
+    if not auth.is_logged_in():
+       response.menu_auth = [
+           [T('Login'), False, auth.settings.login_url,
+            [
+                   [T('Register'), False,
+                    URL(request.application,'default','user/register')],
+                   [T('Lost Password'), False,
+                    URL(request.application,'default','user/retrieve_password')]]
+            ],
+           ]
+    else:
+        response.menu_auth = [
+            ['User: '+auth.user.first_name,False,None,
+             [
+                    [T('Logout'), False, 
+                     URL(request.application,'default','user/logout')],
+                    [T('Edit Profile'), False, 
+                     URL(request.application,'default','user/profile')],
+                    [T('Change Password'), False,
+                     URL(request.application,'default','user/change_password')]]
+             ],
+            ]
+
+##########################################
+## this is the main application menu
+## add/remove items as required
+##########################################
+response.menu=[]
+if session.login!=0:
+    response.menu += [[SPAN('Home',_class="highlighted"), False,URL(request.application,'default','home_page'), []],
+    ]
+if session.login==1:
+	response.menu += [[T('Applicant'), False,'#', 
+	[
+	[T('Select Applicant'),False,URL(request.application,'default','admin_applicant_list_2'),[]],
+	[T('Applicant Status'),False,URL(request.application,'default','namewise_list'),[]],
+	[T('Selected Applicants'),False,URL(request.application,'default','selected_TA'),[]]
+	],
+	]]
+	response.menu+=[[T("TA's"),False ,'#',[[T("Unselect TA's"),False,URL(request.application,'default','sel_course'),[]],],],]
+	response.menu+=[[T("Allocated TA's"),False,URL(request.application,'default','admin_allocatedTA'),[]],]
+		
+	response.menu+=[[T('Courses'),False,'#',[
+		[T("Add Faculty"),False,URL(request.application,'default','add_faculty'),[]],
+		[T("Add Program"),False,URL(request.application,'default','add_program'),[]],
+		[T("Courses Info"),False,URL(request.application,'default','courses_info'),[]],
+		[T("Add Course"),False,URL(request.application,'default','add_courses'),[]],
+		[T("Update Course"),False,URL(request.application,'default','update_course'),[]],
+		[T("Delete"),False,URL(request.application,'default','delete'),[]],
+		]],]
+	response.menu+=[[T('Settings'),False,'#',[
+		[T("Set Applicant Deadline"),False,URL(request.application,'default','set_date'),[]],
+		[T("Update Db"),False,URL(request.application,'default','upload'),[]],
+		[T("View Log Table"),False,URL(request.application,'default','logtable'),[]],
+		[T("Update Students Db"),False,URL(request.application,'default','isas_upload'),[]],
+		[T("View Previous Applicant Log"),False,URL(request.application,'default','view_previous_applicant_log'),[]],
+		[T("Set Faculty Deadline"),False,URL(request.application,'default','nominate_date'),[]],
+		]]
+	,]
+if session.login==3:
+	check=datetime.datetime.now()
+	portal=db(db.Faculty_deadline.id>0).select()
+	if portal:
+		starting=portal[0].start_date
+		ending=portal[0].end_date
+		if check > starting and check < ending:
+			response.menu += [[T('Nominate Applicant'), False,URL(request.application,'default','faculty_applicant_list_2'), []]]
+	response.menu += [[T("Allocated TA's"), False,URL(request.application,'default','faculty_allocatedTA'), []],]
+	response.menu += [[T("Selected Applicant"), False,URL(request.application,'default','faculty_selectedTA'), []],]
+	
+if session.login==2:
+	check=datetime.datetime.now()
+	portal=db(db.Portaldate.id>0).select()
+	if portal:
+		starting=portal[0].start_date
+		ending=portal[0].end_date
+		if (db(db.Applicant.apemail_id == session.student_email).select()):
+			response.menu += [[T('My Profile'), False,URL(request.application,'default','student_profile'), []]]
+		if check > starting:
+			tlist=[]
+			if check<ending:
+				tlist+= [[T('Apply For Taship'),False,URL(request.application,'default','TA_application'),[]]]
+			if (db((db.Applicant.apemail_id == session.student_email) & (db.AppliedFor.appid ==db.Applicant.id)).select()):
+				tlist+= [[T('Application Status'),False,URL(request.application,'default','status'),[]]]
+			response.menu += [[T('Taship'), False,'#', tlist]]
+		if (db((db.Applicant.apemail_id == session.student_email) & (db.AppliedFor.appid ==db.Applicant.id)).select()):
+			if check > starting and check < ending:
+				response.menu += [[T('Delete Application'), False,URL(request.application,'default','unselect_course'), []]]
+		selected = db((db.Applicant.id == db.SelectedTA.appid) & (db.Applicant.id == db.AppliedFor.appid) & (db.Applicant.apemail_id == session.student_email)).select()
+		if selected:
+			if selected[0].SelectedTA.flag==1:
+				response.menu += [[T('TA Reporting Form'), False,URL(response.application,'default','getPdf'), []]]
+		response.menu += [[T('Course Info'), False,URL(response.application,'default','courses_info'), []]]
+response.menu+=[[T('Admin Contacts'),False,URL(request.application,'default','contacts'),[]]]
+if session.login == 1 or session.login==3:
+	response.menu+=[[SPAN('Notifications'),False,'#openModal',[]]]
+	response.menu+=[[SPAN('Admin Privileges'),False,'#openAdmin',[]]]
+
+
+
+##########################################
+## this is here to provide shortcuts
+## during development. remove in production 
+##########################################
+
+response.menu_edit=[
+  [T('Edit'), False, URL('admin', 'default', 'design/%s' % request.application),
+   [
+            [T('Controller'), False, 
+             URL('admin', 'default', 'edit/%s/controllers/default.py' \
+                     % request.application)],
+            [T('View'), False, 
+             URL('admin', 'default', 'edit/%s/views/%s' \
+                     % (request.application,response.view))],
+            [T('Layout'), False, 
+             URL('admin', 'default', 'edit/%s/views/layout.html' \
+                     % request.application)],
+            [T('Stylesheet'), False, 
+             URL('admin', 'default', 'edit/%s/static/base.css' \
+                     % request.application)],
+            [T('DB Model'), False, 
+             URL('admin', 'default', 'edit/%s/models/db.py' \
+                     % request.application)],
+            [T('Menu Model'), False, 
+             URL('admin', 'default', 'edit/%s/models/menu.py' \
+                     % request.application)],
+            [T('Database'), False, 
+             URL(request.application, 'appadmin', 'index')],
+            ]
+   ],
+  ]

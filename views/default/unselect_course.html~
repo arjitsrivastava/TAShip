@@ -1,0 +1,37 @@
+{{extend 'layout.html'}}
+<script language='javascript'>
+   function confirmation(){
+      var where_to = confirm('Do you really want to unselect this course??');
+      if( where_to == false ){
+     window.location='unselect_course.html';
+      }
+   }
+</script>
+<font size='5'><center>UNSELECT COURSES</center></font><br><br>
+{{ formAccept = 0 }}
+{{ if (request.vars.submit) : }}
+	  {{ course_id = request.vars.courseId}}
+	         
+	  {{ Id = db((db.AppliedFor.cid == course_id)&(db.AppliedFor.appid == appid)).select() }}
+ 	  {{ if Id:}}
+			{{ db((db.AppliedFor.cid == course_id)&(db.AppliedFor.appid == appid)).delete()}}
+			{{ session.flash = 'Course Unselected Successfully ' }}
+			{{ pass }}
+	{{ redirect(URL(r = request, f = 'unselect_course'))}}
+{{ pass }}
+<center>
+   <form id='form2' name="form2" action='unselect_course.html' method='post'>
+      <table>
+	 <tr><td>
+	       Select Course: </td><td>
+	       <select name='courseId'>
+		  {{ for rows in appcor: }}
+		  <option value='{{ =rows.Course.id }}'>  {{=rows.Course.cname}}({{=rows.Course.id}}) </option>
+		  {{ pass }}
+	    </td></tr>
+	 </select>
+	    </table>
+	    <br>
+	 <input id='submit' type='submit' name='submit' value='Unselect'  />
+      </form>
+   </center>

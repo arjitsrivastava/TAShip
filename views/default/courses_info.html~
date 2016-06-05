@@ -1,0 +1,22 @@
+{{extend 'layout.html'}}
+<center><font size='5'>COURSES INFORMATION</font></center><br /><br />
+<center>
+<table border='1' cellspacing='0'>
+   <tr>
+      <td padding="5px"><center>&nbsp;COURSE NAME&nbsp;</center></td>
+      <td padding="5px"><center>&nbsp;COURSE ID&nbsp;</center></td>
+      <td padding="5px"><center>&nbsp;COURSE CREDITS&nbsp;</center></td>
+      <td padding="5px"><center>&nbsp;HOURS PER WEEK&nbsp;</center> </td>
+      <td padding="5px"><center>&nbsp;FACULTY&nbsp;</center> </td>
+   </tr>
+   {{ for i in r :}}
+   <tr>
+      <td><center>{{=i.Course.cname}}</center></td>
+      <td><center>{{=i.Course.cid}}</center></td>
+      <td><center>{{=i.Course.cdts}}</center></td>
+      <td><center>{{=i.Course.hours_per_week}}</center></td>
+      <td><center>{{=i.Faculty.fname}}</center></td>
+   </tr>
+   {{pass}}
+</table>
+</center>
